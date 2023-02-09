@@ -1,4 +1,4 @@
-package com.quirquirutas.app
+package app.quirqui.navigator
 
 import io.flutter.embedding.android.FlutterActivity
 
