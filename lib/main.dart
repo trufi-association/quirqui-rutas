@@ -1,115 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:quirqui_rutas/custom_async_executor.dart';
+import 'package:trufi_core/base/blocs/map_configuration/map_configuration_cubit.dart';
+import 'package:trufi_core/base/blocs/map_tile_provider/map_tile_provider.dart';
+import 'package:trufi_core/base/models/trufi_latlng.dart';
+import 'package:trufi_core/base/utils/certificates_letsencrypt_android.dart';
+import 'package:trufi_core/base/utils/graphql_client/hive_init.dart';
+import 'package:trufi_core/base/widgets/drawer/menu/social_media_item.dart';
+import 'package:trufi_core/base/widgets/screen/lifecycle_reactor_notification.dart';
+import 'package:trufi_core/default_values.dart';
+import 'package:trufi_core/trufi_core.dart';
+import 'package:trufi_core/trufi_router.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await CertificatedLetsencryptAndroid.workAroundCertificated();
+  await initHiveForFlutter();
+  runApp(
+    TrufiApp(
+      appNameTitle: 'Quirqui rutas',
+      blocProviders: [
+        ...DefaultValues.blocProviders(
+          otpEndpoint: "https://api.quirquirutas.com/otp",
+          otpGraphqlEndpoint: "https://api.quirquirutas.com/otp/index/graphql",
+          mapConfiguration: MapConfiguration(
+            center: const TrufiLatLng(5.82303, -73.03762),
+          ),
+          searchAssetPath: "assets/data/search.json",
+          photonUrl: "https://api.quirquirutas.com/photon",
+          mapTileProviders: [
+            OSMMapLayer(
+              mapTilesUrl:
+                  "https://api.quirquirutas.com/static-maps/basic/{z}/{x}/{y}@2x.jpg",
+            )
           ],
         ),
+      ],
+      trufiRouter: TrufiRouter(
+        routerDelegate: DefaultValues.routerDelegate(
+          appName: 'Quirqui rutas',
+          cityName: 'Oruro',
+          countryName: 'Bolivia',
+          backgroundImageBuilder: (_) {
+            return Image.asset(
+              'assets/images/drawer-bg.jpg',
+              fit: BoxFit.cover,
+            );
+          },
+          urlFeedback: 'https://example/feedback',
+          emailContact: 'example@example.com',
+          urlShareApp: 'https://example/share',
+          urlSocialMedia: const UrlSocialMedia(
+            urlFacebook: 'https://www.facebook.com/Example',
+          ),
+          shareBaseUri: Uri(
+            scheme: "https",
+            host: "api.quirquirutas.com",
+          ),
+          lifecycleReactorHandler: LifecycleReactorNotifications(
+            url:
+                'https://api.quirquirutas.com/static_files/notification.json',
+          ),
+          asyncExecutor: customAsyncExecutor,
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
+    ),
+  );
 }
