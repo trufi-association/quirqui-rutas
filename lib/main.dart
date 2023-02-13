@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:quirqui_rutas/custom_async_executor.dart';
+import 'package:quirqui_rutas/values.dart';
 import 'package:trufi_core/base/blocs/map_configuration/map_configuration_cubit.dart';
 import 'package:trufi_core/base/blocs/map_tile_provider/map_tile_provider.dart';
 import 'package:trufi_core/base/models/trufi_latlng.dart';
 import 'package:trufi_core/base/utils/certificates_letsencrypt_android.dart';
 import 'package:trufi_core/base/utils/graphql_client/hive_init.dart';
-import 'package:trufi_core/base/widgets/drawer/menu/social_media_item.dart';
 import 'package:trufi_core/base/widgets/screen/lifecycle_reactor_notification.dart';
-import 'package:trufi_core/default_values.dart';
 import 'package:trufi_core/trufi_core.dart';
 import 'package:trufi_core/trufi_router.dart';
 
@@ -23,7 +22,7 @@ void main() async {
           otpEndpoint: "https://api.quirquirutas.com/otp",
           otpGraphqlEndpoint: "https://api.quirquirutas.com/otp/index/graphql",
           mapConfiguration: MapConfiguration(
-            center: const TrufiLatLng(5.82303, -73.03762),
+            center: const TrufiLatLng(-17.970346, -67.114352),
           ),
           searchAssetPath: "assets/data/search.json",
           photonUrl: "https://api.quirquirutas.com/photon",
@@ -46,12 +45,8 @@ void main() async {
               fit: BoxFit.cover,
             );
           },
-          urlFeedback: 'https://example/feedback',
-          emailContact: 'example@example.com',
-          urlShareApp: 'https://example/share',
-          urlSocialMedia: const UrlSocialMedia(
-            urlFacebook: 'https://www.facebook.com/Example',
-          ),
+          emailContact: 'feedback@trufi.app',
+          urlShareApp: 'https://quirquirutas.com',
           shareBaseUri: Uri(
             scheme: "https",
             host: "api.quirquirutas.com",
