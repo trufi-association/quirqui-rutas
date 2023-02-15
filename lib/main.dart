@@ -17,6 +17,9 @@ void main() async {
   runApp(
     TrufiApp(
       appNameTitle: 'Quirqui rutas',
+      trufiLocalization: DefaultValues.trufiLocalization(
+        currentLocale: const Locale("es"),
+      ),
       blocProviders: [
         ...DefaultValues.blocProviders(
           otpEndpoint: "https://api.quirquirutas.com/otp",
