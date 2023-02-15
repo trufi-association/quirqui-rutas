@@ -2,6 +2,7 @@
 
 import 'package:async_executor/async_executor.dart';
 import 'package:flutter/material.dart';
+import 'package:quirqui_rutas/oruro_about.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,7 +19,6 @@ import 'package:trufi_core/base/pages/home/services/request_plan_service.dart';
 import 'package:trufi_core/base/pages/saved_places/saved_places.dart';
 import 'package:trufi_core/base/pages/saved_places/translations/saved_places_localizations.dart';
 import 'package:trufi_core/base/pages/transport_list/transport_list.dart';
-import 'package:trufi_core/base/translations/trufi_base_localizations.dart';
 import 'package:trufi_core/base/widgets/drawer/menu/default_item_menu.dart';
 import 'package:trufi_core/base/widgets/drawer/menu/default_pages_menu.dart';
 import 'package:trufi_core/base/widgets/drawer/menu/trufi_menu_item.dart';
@@ -159,7 +159,7 @@ abstract class DefaultValues {
               );
             },
             AboutPage.route: (route) => NoAnimationPage(
-                  child: AboutPage(
+                  child: OruroAboutPage(
                     appName: appName,
                     cityName: cityName,
                     countryName: countryName,
